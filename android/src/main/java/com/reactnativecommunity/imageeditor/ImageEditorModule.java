@@ -36,6 +36,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.GuardedAsyncTask;
@@ -53,6 +54,11 @@ import com.facebook.react.common.ReactConstants;
  * Native module that provides image cropping functionality.
  */
 public class ImageEditorModule extends ReactContextBaseJavaModule {
+
+  private static final String TAG = "PAPAN_LOG";
+  private static void log(Object msg) {
+    Log.v(TAG, msg.toString());
+  }
 
   protected static final String NAME = "RNCImageEditor";
 
@@ -299,6 +305,7 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
       BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(inputStream, false);
       try {
         Rect rect = new Rect(mX, mY, mX + mWidth, mY + mHeight);
+        log("mX " + mX + ", mY " +  mY + ", right " + rect.right + ", " + rect.bottom);
         return decoder.decodeRegion(rect, outOptions);
       } finally {
         if (inputStream != null) {
@@ -348,6 +355,7 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
       // Decode the bitmap. We have to open the stream again, like in the example linked above.
       // Is there a way to just continue reading from the stream?
       outOptions.inSampleSize = getDecodeSampleSize(mWidth, mHeight, targetWidth, targetHeight);
+      log("w " + mWidth + ", h" + mHeight + ", tW" + targetWidth + ", th" + targetHeight);
       InputStream inputStream = openBitmapInputStream();
 
       Bitmap bitmap;
